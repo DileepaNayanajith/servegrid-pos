@@ -1,0 +1,53 @@
+FASTPOS — WINDOWS TOUCHSCREEN FOOD POS
+=====================================
+
+1. Install Python 3.10+ on Windows if it is not installed.
+   https://www.python.org/downloads/windows/
+   During install, tick "Add Python to PATH".
+
+2. Extract this complete ZIP to a folder on the POS PC.
+
+3. Double-click:  start_pos.bat
+   Keep the black server window open.
+
+4. If browser does not open itself, visit:
+   http://127.0.0.1:8765
+
+5. Press F11 in Chrome / Edge for a full-screen touch POS.
+
+6. IMPORTANT: Prices shown initially are DEMO examples only.
+   Owner button -> create PIN -> verify/edit food prices -> enable LIVE.
+
+7. Keyboard shortcuts:
+   101 Enter      = Chicken Rice x1
+   3*101 Enter    = Chicken Rice x3
+   111 Enter      = String Hoppers x10
+   112 Enter      = String Hoppers x15
+   113 Enter      = String Hoppers x20
+   20*110 Enter   = String Hoppers x20
+
+8. Touchscreen also works, without any food-code knowledge.
+
+9. The saved database is stored in data/fastpos.db.
+   Back up the entire data folder regularly after stopping FASTPOS.
+
+10. Browser receipt printing is available. Direct automatic thermal
+    printer integration is not yet enabled. Need printer model + connection.
+
+No npm, no pip install, and no internet needed for everyday operation.
+
+Read README.md for complete guide.
+
+
+MACBOOK QUICK START
+===================
+In Terminal, change directory into this folder and run:
+  python3 server.py
+Open http://127.0.0.1:8765
+Stop with Ctrl+C.
+Or use start_pos.command (Mac launcher).
+
+GITHUB
+======
+Read the GitHub workflow section of README.md. No account credentials
+or live customer/order database are included in this source code.

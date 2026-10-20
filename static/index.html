@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#172a42" />
+  <title>FASTPOS | Restaurant Counter</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="brand"><div class="brand-mark">F<span>•</span></div><div><div class="brand-name">FASTPOS <span>COUNTER</span></div><div class="brand-sub">Simple food billing • පහසු බිල් පද්ධතිය</div></div></div>
+      <div class="header-actions">
+        <span class="local-indicator"><span class="green-dot"></span> LOCAL / OFFLINE READY</span>
+        <span id="clock" class="clock">--:--</span>
+        <button class="header-button" id="open-orders" title="Previous orders">▤ <span>Orders</span></button>
+        <button class="header-button" id="open-owner" title="Owner settings">⚙ <span>Owner</span></button>
+      </div>
+    </header>
+
+    <div id="demo-banner" class="demo-banner"><strong>DEMO MODE</strong><span>Example food prices only. Owner must verify prices before LIVE billing.</span><button id="banner-owner">Set prices →</button></div>
+
+    <div class="main-toolbar">
+      <div class="toolbar-block meal-block">
+        <div class="toolbar-label">MEAL MENU <span>කෑම වේල</span></div>
+        <div class="meal-switch" role="group" aria-label="Meal menu">
+          <button class="meal-btn active" data-meal="breakfast">☀ <span>Breakfast</span></button>
+          <button class="meal-btn" data-meal="lunch">◉ <span>Lunch</span></button>
+          <button class="meal-btn" data-meal="dinner">☾ <span>Dinner</span></button>
+        </div>
+      </div>
+      <div class="toolbar-divider"></div>
+      <div class="toolbar-block service-block">
+        <div class="toolbar-label">ORDER TYPE <span>ආහාර ගන්නා විදිහ</span></div>
+        <div class="service-switch" role="group" aria-label="Order type">
+          <button class="service-btn active" data-service="Takeaway">▣ Takeaway</button>
+          <button class="service-btn" data-service="Dine-in">♨ Dine-in</button>
+        </div>
+      </div>
+      <div id="table-area" class="table-number hidden"><label for="table-no">Table</label><input id="table-no" type="text" inputmode="numeric" maxlength="10" placeholder="No." /></div>
+    </div>
+
+    <div class="workspace">
+      <section class="catalog" aria-label="Food selection">
+        <div class="code-panel">
+          <div class="code-icon">⌨</div>
+          <div class="code-description"><strong>Food Code</strong><small>Type code, press Enter • කේතය ගහන්න</small></div>
+          <form id="code-form" class="code-form" autocomplete="off">
+            <input id="code-input" type="text" inputmode="text" pattern="[0-9*xX ]*" placeholder="101 or 2*101" aria-label="Food code or quantity times code" />
+            <button type="submit" class="add-code-button">+ ADD</button>
+          </form>
+        </div>
+        <div class="feedback-line" id="feedback" aria-live="polite">Tap any food below to add it to the bill.</div>
+        <div class="quick-extras"><span class="quick-extras-title">QUICK EXTRAS →</span><div id="quick-extras-buttons" class="quick-extras-buttons"></div></div>
+        <div id="menu-scroll" class="menu-scroll">
+          <div id="menu-groups"></div>
+        </div>
+      </section>
+
+      <aside class="bill-panel" aria-label="Current bill">
+        <div class="bill-head"><div><span class="bill-eyebrow">CURRENT BILL</span><h2>New Order <span id="bill-mode">• Takeaway</span></h2></div><button class="undo-button" id="undo-button" disabled title="Undo last item">↶ Undo</button></div>
+        <div id="bill-items" class="bill-items"><div class="empty-cart"><div class="empty-icon">▤</div><strong>No food added yet</strong><span>කෑමක් තෝරන්න</span></div></div>
+        <div class="bill-summary">
+          <div class="summary-top"><span id="bill-units">0 items</span><span id="bill-lines">0 types</span></div>
+          <div class="total-row"><div><span class="total-label">TOTAL BILL</span><small>මුළු මුදල</small></div><div id="bill-total" class="total-number">Rs. 0</div></div>
+        </div>
+        <div class="pay-section">
+          <div class="section-label">HOW WILL CUSTOMER PAY? <span>ගෙවන්නේ කොහොමද?</span></div>
+          <div class="payment-tabs">
+            <button class="payment-btn active" data-payment="Cash">▤ Cash</button>
+            <button class="payment-btn" data-payment="Card">▣ Card</button>
+            <button class="payment-btn" data-payment="QR">▦ QR</button>
+          </div>
+          <div id="cash-box" class="cash-box">
+            <div class="cash-top"><label for="cash-received">Cash Received (Rs.)</label><button id="exact-cash" class="exact-btn">EXACT</button></div>
+            <input id="cash-received" type="number" min="0" step="1" placeholder="Enter amount" inputmode="numeric" />
+            <div class="cash-presets"><button data-tender="500">500</button><button data-tender="1000">1,000</button><button data-tender="2000">2,000</button><button data-tender="5000">5,000</button></div>
+            <div class="change-line"><span>Balance to give</span><strong id="change-amount">Rs. 0</strong></div>
+          </div>
+          <div id="external-warning" class="external-warning hidden">Confirm payment on the separate Card / QR terminal before completing this order.</div>
+          <button class="complete-btn" id="complete-btn" disabled>✓ COMPLETE ORDER <span>→</span></button>
+          <button class="cancel-btn" id="cancel-btn">✕ Clear Current Order</button>
+        </div>
+      </aside>
+    </div>
+    <footer class="app-footer"><span>QUICK KEYS</span><span><kbd>101</kbd> ↵ Add</span><span><kbd>3*101</kbd> ↵ Quantity</span><span><kbd>F2</kbd> Dine-in/Takeaway</span><span><kbd>F4</kbd> Food Code</span><span><kbd>F8</kbd> Cash</span><span class="footer-right">Works without internet • Windows Touch POS</span></footer>
+  </div>
+
+  <div id="modal-backdrop" class="modal-backdrop hidden" role="presentation"><div id="modal-content" class="modal" role="dialog" aria-modal="true" aria-label="Dialog"></div></div>
+  <div id="toast" class="toast hidden" role="status"></div>
+  <script src="/app.js" defer></script>
+</body>
+</html>

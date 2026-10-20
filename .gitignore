@@ -1,0 +1,30 @@
+# POS sales, customer transactions and local private settings
+/data/*.db
+/data/*.db-*
+/data/*.sqlite
+/data/*.sqlite3
+/data/*.sqlite3-*
+/data/*.json
+/data/backups/
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Python and Mac/Windows temporary files
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+.env
+.env.*
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+
+# Editor local settings
+.vscode/
+.idea/
