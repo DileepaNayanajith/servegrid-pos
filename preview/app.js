@@ -71,14 +71,17 @@
     if(!qty||qty>999){feedback('Quantity should be 1 to 999','error');return;}
     const oldQty=(state.cart[code]||0);
     addFood(code,qty);
-    if((state.cart[code]||0)>oldQty)codeInput.value='';
+    if((state.cart[code]||0)>oldQty){codeInput.value='';renderMenu();}
   }
 
   function renderMenu(){
-    const quick=state.items.filter(x=>x.active && x.category==="Beverages" && x.meals.includes(state.meal)).slice(0,4);
+    const query=codeInput.value.trim().toLowerCase().replace(/^\d{1,3}\s*[x*]\s*/, '').trim();
+    const matches=food=>!query || (/^\d+$/.test(query)?food.code.startsWith(query):food.name.toLowerCase().includes(query));
+    const quick=state.items.filter(x=>x.active && x.category==="Beverages" && x.meals.includes(state.meal) && matches(x)).slice(0,4);
     $("quick-extras-buttons").innerHTML=quick.map(x=>`<button class="quick-extra-btn" data-quick-code="${escapeHtml(x.code)}"><span class="q-code">#${escapeHtml(x.code)}</span> ${escapeHtml(x.name)} <b>+</b></button>`).join("");
     document.querySelectorAll('.meal-btn').forEach(b=>b.classList.toggle('active',b.dataset.meal===state.meal));
-    const products=state.items.filter(x=>x.active&&x.meals.includes(state.meal));
+    const products=state.items.filter(x=>x.active&&x.meals.includes(state.meal)&&matches(x));
+    $('search-status').textContent=query?`${products.length} matching item${products.length===1?'':'s'} in ${mealLabels[state.meal]} • Tap an item to add, or enter a full code + Enter.`:'';
     const categories=[...categoryOrder,...new Set(products.map(x=>x.category).filter(x=>!categoryOrder.includes(x)))];
     const parts=[];
     for(const category of categories){
@@ -90,7 +93,7 @@
       }
       parts.push(`<section class="food-section"><div class="food-heading"><span>${escapeHtml(categoryLabels[category]||category)}${category==='String Hoppers'?'<small class="hopper-info">10 / 15 / 20 PCS — SET PRICES</small>':''}</span><small>TOUCH TO ADD +</small></div><div class="food-grid">${tiles.join('')}</div></section>`);
     }
-    $('menu-groups').innerHTML=parts.length?parts.join(''):`<div class="empty-menu">No foods in ${escapeHtml(mealLabels[state.meal])} menu.<br><small>Owner can add foods through Owner → Prices & Foods.</small></div>`;
+    $('menu-groups').innerHTML=parts.length?parts.join(''):`<div class="empty-menu">${query?'No matching foods in '+escapeHtml(mealLabels[state.meal])+'.<br><small>Try another code or name, change the meal, or clear the search.</small>':'No foods in '+escapeHtml(mealLabels[state.meal])+' menu.'}</div>`;
   }
   function tile(food,code,qty,label){
     let kind=food.category==='Rice & Curry'?'rice':food.category==='String Hoppers'?'hoppers':food.category==='Bread'?'bread':(food.category==='Extras & Drinks'||food.category==='Beverages')?'extras':'other';
@@ -230,6 +233,7 @@
   function printHistory(orderId){const o=state.orders.find(x=>x.id===orderId);if(o)printOrder(o);}
 
   // Events — both large touch areas and quick keyboard codes work.
+  codeInput.addEventListener('input',()=>{renderMenu();$('menu-scroll').scrollTop=0;});
   $('code-form').addEventListener('submit',e=>{e.preventDefault();enterCode();codeInput.focus();});
   $('quick-extras-buttons').addEventListener('click',e=>{const el=e.target.closest('[data-quick-code]');if(el)addFood(el.dataset.quickCode);});
   $('menu-groups').addEventListener('click',e=>{const el=e.target.closest('button[data-code]');if(el)addFood(el.dataset.code,Number(el.dataset.qty));});
@@ -285,7 +289,7 @@
     if(e.ctrlKey||e.metaKey||e.altKey)return;
     const hasModal=!$('modal-backdrop').classList.contains('hidden');
     if(e.key==='Escape'){
-      if(hasModal)closeModal();else{codeInput.value='';feedback('Code entry cleared.');}
+      if(hasModal)closeModal();else{codeInput.value='';renderMenu();feedback('Search cleared.');}
       e.preventDefault();return;
     }
     if(hasModal)return;
@@ -295,7 +299,7 @@
     if(e.key==='F8'){e.preventDefault();setPayment('Cash');$('cash-received').focus();return;}
     if(active&&['INPUT','TEXTAREA','SELECT'].includes(active.tagName))return;
     if(/^[0-9*xX]$/.test(e.key)){
-      e.preventDefault();codeInput.focus();codeInput.value+=e.key;
+      e.preventDefault();codeInput.focus();codeInput.value+=e.key;renderMenu();
     }else if(e.key==='Enter'&&codeInput.value.trim()){
       e.preventDefault();enterCode();codeInput.focus();
     }

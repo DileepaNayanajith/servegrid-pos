@@ -47,14 +47,15 @@
       <section class="catalog" aria-label="Food selection">
         <div class="code-panel">
           <div class="code-icon">⌨</div>
-          <div class="code-description"><strong>Food Code</strong><small>Type code, press Enter • කේතය ගහන්න</small></div>
+          <div class="code-description"><strong>Food Code / Search</strong><small>Type code or name to filter • Enter code to add</small></div>
           <form id="code-form" class="code-form" autocomplete="off">
-            <input id="code-input" type="text" inputmode="text" pattern="[0-9*xX ]*" placeholder="101 or 2*101" aria-label="Food code or quantity times code" />
+            <input id="code-input" type="text" inputmode="text" placeholder="Code or food name" aria-label="Food code or quantity times code" />
             <button type="submit" class="add-code-button">+ ADD</button>
           </form>
         </div>
         <div class="feedback-line" id="feedback" aria-live="polite">Tap any food below to add it to the bill.</div>
         <div class="quick-extras"><span class="quick-extras-title">QUICK DRINKS →</span><div id="quick-extras-buttons" class="quick-extras-buttons"></div></div>
+        <div id="search-status" class="feedback-line" role="status" aria-live="polite"></div>
         <div id="menu-scroll" class="menu-scroll">
           <div id="menu-groups"></div>
         </div>
