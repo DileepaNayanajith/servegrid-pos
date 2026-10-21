@@ -1,0 +1,602 @@
+{
+  "source_url": "https://theek23.github.io/batakade-menu/",
+  "source_repository": "https://github.com/theek23/batakade-menu",
+  "retrieved": "2026-10-21",
+  "notes": [
+    "Customer JSON lists breakfast and lunch/dinner separately; rice codes 101-104 and 301-304 distinguish their different prices.",
+    "String hopper 10/15/20 portions are separate priced products; quantity 2 means two sets.",
+    "Nescafe / Nestomalt / Milo are combined at Rs. 120 in the source; displayed separately at that common price.",
+    "Items without source prices remain inactive until confirmed."
+  ],
+  "items": [
+    {
+      "code": "101",
+      "name": "Chicken Rice & Curry",
+      "price": 280,
+      "category": "Rice & Curry",
+      "meals": [
+        "breakfast"
+      ],
+      "sort": 1,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "102",
+      "name": "Fish Rice & Curry",
+      "price": 230,
+      "category": "Rice & Curry",
+      "meals": [
+        "breakfast"
+      ],
+      "sort": 2,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "103",
+      "name": "Egg Rice & Curry",
+      "price": 230,
+      "category": "Rice & Curry",
+      "meals": [
+        "breakfast"
+      ],
+      "sort": 3,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "104",
+      "name": "Vegetable Rice & Curry",
+      "price": 180,
+      "category": "Rice & Curry",
+      "meals": [
+        "breakfast"
+      ],
+      "sort": 4,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "111",
+      "name": "String Hoppers - 10 pcs",
+      "price": 120,
+      "category": "String Hoppers",
+      "meals": [
+        "breakfast"
+      ],
+      "sort": 5,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "112",
+      "name": "String Hoppers - 15 pcs",
+      "price": 160,
+      "category": "String Hoppers",
+      "meals": [
+        "breakfast"
+      ],
+      "sort": 6,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "113",
+      "name": "String Hoppers - 20 pcs",
+      "price": 200,
+      "category": "String Hoppers",
+      "meals": [
+        "breakfast"
+      ],
+      "sort": 7,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "124",
+      "name": "Bread 1/2 + Gravy",
+      "price": 220,
+      "category": "Bread",
+      "meals": [
+        "breakfast"
+      ],
+      "sort": 8,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "126",
+      "name": "Milk Rice - 1 Piece",
+      "price": 100,
+      "category": "Other Foods",
+      "meals": [
+        "breakfast"
+      ],
+      "sort": 9,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "127",
+      "name": "Noodles",
+      "price": 160,
+      "category": "Other Foods",
+      "meals": [
+        "breakfast"
+      ],
+      "sort": 10,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "121",
+      "name": "Parata Roti",
+      "price": 60,
+      "category": "Short Eats",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 11,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "122",
+      "name": "Egg Roti",
+      "price": 80,
+      "category": "Short Eats",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 12,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "211",
+      "name": "Egg Rolls",
+      "price": 100,
+      "category": "Short Eats",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 13,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "212",
+      "name": "Fish Rolls",
+      "price": 100,
+      "category": "Short Eats",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 14,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "213",
+      "name": "Vegetable Roti",
+      "price": 80,
+      "category": "Short Eats",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 15,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "214",
+      "name": "Wadei",
+      "price": 30,
+      "category": "Short Eats",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 16,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "215",
+      "name": "Ulundu Wadei",
+      "price": 60,
+      "category": "Short Eats",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 17,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "204",
+      "name": "Plain Tea",
+      "price": 50,
+      "category": "Beverages",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 18,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "202",
+      "name": "Milk Tea",
+      "price": 100,
+      "category": "Beverages",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 19,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "205",
+      "name": "Plain Coffee",
+      "price": 60,
+      "category": "Beverages",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 20,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "206",
+      "name": "Milk Coffee",
+      "price": 130,
+      "category": "Beverages",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 21,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "203",
+      "name": "Nestomalt",
+      "price": 120,
+      "category": "Beverages",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 22,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "207",
+      "name": "Nescafe",
+      "price": 120,
+      "category": "Beverages",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 23,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "208",
+      "name": "Milo",
+      "price": 120,
+      "category": "Beverages",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 24,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "209",
+      "name": "Soft Drink - Buddy",
+      "price": 100,
+      "category": "Beverages",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 25,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "210",
+      "name": "Soft Drink - Medium",
+      "price": 120,
+      "category": "Beverages",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 26,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "301",
+      "name": "Chicken Rice & Curry",
+      "price": 350,
+      "category": "Rice & Curry",
+      "meals": [
+        "lunch",
+        "dinner"
+      ],
+      "sort": 27,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "302",
+      "name": "Fish Rice & Curry",
+      "price": 250,
+      "category": "Rice & Curry",
+      "meals": [
+        "lunch",
+        "dinner"
+      ],
+      "sort": 28,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "303",
+      "name": "Egg Rice & Curry",
+      "price": 250,
+      "category": "Rice & Curry",
+      "meals": [
+        "lunch",
+        "dinner"
+      ],
+      "sort": 29,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "304",
+      "name": "Vegetable Rice & Curry",
+      "price": 200,
+      "category": "Rice & Curry",
+      "meals": [
+        "lunch",
+        "dinner"
+      ],
+      "sort": 30,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "311",
+      "name": "Egg Fried Rice - Half",
+      "price": 300,
+      "category": "Fried Rice",
+      "meals": [
+        "lunch",
+        "dinner"
+      ],
+      "sort": 31,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "312",
+      "name": "Egg Fried Rice - Full",
+      "price": 500,
+      "category": "Fried Rice",
+      "meals": [
+        "lunch",
+        "dinner"
+      ],
+      "sort": 32,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "313",
+      "name": "Chicken Fried Rice - Half",
+      "price": 350,
+      "category": "Fried Rice",
+      "meals": [
+        "lunch",
+        "dinner"
+      ],
+      "sort": 33,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "314",
+      "name": "Chicken Fried Rice - Full",
+      "price": 600,
+      "category": "Fried Rice",
+      "meals": [
+        "lunch",
+        "dinner"
+      ],
+      "sort": 34,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "315",
+      "name": "Mix Fried Rice - Half",
+      "price": 500,
+      "category": "Fried Rice",
+      "meals": [
+        "lunch",
+        "dinner"
+      ],
+      "sort": 35,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "316",
+      "name": "Mix Fried Rice - Full",
+      "price": 700,
+      "category": "Fried Rice",
+      "meals": [
+        "lunch",
+        "dinner"
+      ],
+      "sort": 36,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "317",
+      "name": "Biriyani",
+      "price": 450,
+      "category": "Other Foods",
+      "meals": [
+        "lunch",
+        "dinner"
+      ],
+      "sort": 37,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "321",
+      "name": "Egg Kottu - Half",
+      "price": 400,
+      "category": "Kottu",
+      "meals": [
+        "lunch",
+        "dinner"
+      ],
+      "sort": 38,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "322",
+      "name": "Egg Kottu - Full",
+      "price": 600,
+      "category": "Kottu",
+      "meals": [
+        "lunch",
+        "dinner"
+      ],
+      "sort": 39,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "323",
+      "name": "Chicken Kottu - Half",
+      "price": 450,
+      "category": "Kottu",
+      "meals": [
+        "lunch",
+        "dinner"
+      ],
+      "sort": 40,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "324",
+      "name": "Chicken Kottu - Full",
+      "price": 650,
+      "category": "Kottu",
+      "meals": [
+        "lunch",
+        "dinner"
+      ],
+      "sort": 41,
+      "active": true,
+      "source": "customer"
+    },
+    {
+      "code": "110",
+      "name": "String Hoppers - 1 pc",
+      "price": 0,
+      "category": "String Hoppers",
+      "meals": [
+        "breakfast"
+      ],
+      "sort": 42,
+      "active": false,
+      "source": "unconfirmed"
+    },
+    {
+      "code": "123",
+      "name": "Bread 1/4",
+      "price": 0,
+      "category": "Bread",
+      "meals": [
+        "breakfast"
+      ],
+      "sort": 43,
+      "active": false,
+      "source": "unconfirmed"
+    },
+    {
+      "code": "125",
+      "name": "Bread - Full",
+      "price": 0,
+      "category": "Bread",
+      "meals": [
+        "breakfast"
+      ],
+      "sort": 44,
+      "active": false,
+      "source": "unconfirmed"
+    },
+    {
+      "code": "201",
+      "name": "Egg (Extra)",
+      "price": 0,
+      "category": "Extras & Drinks",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 45,
+      "active": false,
+      "source": "unconfirmed"
+    }
+  ]
+}
