@@ -3,97 +3,110 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#172a42" />
+  <meta name="theme-color" content="#16263c" />
   <meta name="robots" content="noindex,nofollow,noarchive" />
   <title>BATA KADE | Touchscreen POS Preview</title>
   <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-  <link rel="stylesheet" href="./style.css?v=owner-menu-2" />
+  <link rel="stylesheet" href="./style.css?v=compact-1" />
 </head>
 <body>
   <div class="app-shell">
     <header class="app-header">
-      <div class="brand"><div class="brand-mark">BK</div><div><div class="brand-name">BATA KADE <span>POS</span></div><div class="brand-sub">Touch & keyboard ordering • Customer UI Preview</div></div></div>
+      <div class="brand" title="BATA KADE POS • Touch &amp; keyboard ordering">
+        <div class="brand-mark">BK</div>
+        <div class="brand-name">BATA KADE <span>POS</span></div>
+      </div>
+      <div id="demo-banner" class="demo-pill-head" title="Owner menu updated 17 Nov 2026. DEMO only — no real orders or payments.">
+        <span class="demo-dot" aria-hidden="true"></span><strong>DEMO</strong><span class="demo-text">No real orders or payments</span>
+        <button id="banner-owner" type="button">How to test</button>
+      </div>
+
+      <div class="head-controls">
+        <div class="seg meal-switch" role="group" aria-label="Meal menu (කෑම වේල)">
+          <button class="seg-btn meal-btn active" data-meal="breakfast" aria-pressed="true"><span aria-hidden="true">☀</span> Breakfast</button>
+          <button class="seg-btn meal-btn" data-meal="lunch" aria-pressed="false"><span aria-hidden="true">◉</span> Lunch</button>
+          <button class="seg-btn meal-btn" data-meal="dinner" aria-pressed="false"><span aria-hidden="true">☾</span> Dinner</button>
+        </div>
+        <div class="seg service-switch" role="group" aria-label="Order type (F2)">
+          <button class="seg-btn service-btn active" data-service="Takeaway" aria-pressed="true">Takeaway</button>
+          <button class="seg-btn service-btn" data-service="Dine-in" aria-pressed="false">Dine-in</button>
+        </div>
+        <div id="table-area" class="table-number hidden"><label for="table-no">Table</label><input id="table-no" type="text" inputmode="numeric" maxlength="10" placeholder="No." /></div>
+      </div>
+
       <div class="header-actions">
-        <span class="local-indicator"><span class="green-dot"></span> CUSTOMER PREVIEW</span>
+        <span class="local-indicator" hidden></span>
         <span id="clock" class="clock">--:--</span>
-        <button class="header-button" id="open-orders" title="Previous orders">▤ <span>Orders</span></button>
-        <button class="header-button" id="open-owner" title="How to test this preview">ⓘ <span>Help</span></button>
+        <button class="header-button" id="open-orders" title="Previous orders"><span aria-hidden="true">▤</span> <span class="hb-label">Orders</span></button>
+        <button class="header-button" id="open-owner" title="How to test this preview"><span aria-hidden="true">ⓘ</span> <span class="hb-label">Help</span></button>
       </div>
     </header>
 
-    <div id="demo-banner" class="demo-banner"><strong>UI PREVIEW ONLY</strong><span>BATA KADE • Owner menu updated 17 Nov 2026. DEMO only — no real orders or payments.</span><button id="banner-owner">How to test →</button></div>
-
-    <div class="main-toolbar">
-      <div class="toolbar-block meal-block">
-        <div class="toolbar-label">MEAL MENU <span>කෑම වේල</span></div>
-        <div class="meal-switch" role="group" aria-label="Meal menu">
-          <button class="meal-btn active" data-meal="breakfast">☀ <span>Breakfast</span></button>
-          <button class="meal-btn" data-meal="lunch">◉ <span>Lunch</span></button>
-          <button class="meal-btn" data-meal="dinner">☾ <span>Dinner</span></button>
-        </div>
-      </div>
-      <div class="toolbar-divider"></div>
-      <div class="toolbar-block service-block">
-        <div class="toolbar-label">ORDER TYPE <span>ආහාර ගන්නා විදිහ</span></div>
-        <div class="service-switch" role="group" aria-label="Order type">
-          <button class="service-btn active" data-service="Takeaway">▣ Takeaway</button>
-          <button class="service-btn" data-service="Dine-in">♨ Dine-in</button>
-        </div>
-      </div>
-      <div id="table-area" class="table-number hidden"><label for="table-no">Table</label><input id="table-no" type="text" inputmode="numeric" maxlength="10" placeholder="No." /></div>
-    </div>
-
-    <div class="workspace">
+    <main class="workspace">
       <section class="catalog" aria-label="Food selection">
-        <div class="code-panel">
-          <div class="code-icon">⌨</div>
-          <div class="code-description"><strong>Food Code / Search</strong><small>Type code or name to filter • Enter code to add</small></div>
-          <form id="code-form" class="code-form" autocomplete="off">
-            <input id="code-input" type="text" inputmode="text" placeholder="Code or food name" aria-label="Food code or quantity times code" />
-            <button type="submit" class="add-code-button">+ ADD</button><button type="button" id="clear-search" class="add-code-button" aria-label="Clear search and category">Clear</button>
-          </form>
+        <div class="catalog-top">
+          <div class="search-row">
+            <form id="code-form" class="code-form" autocomplete="off" role="search">
+              <div class="search-field">
+                <span class="search-icon" aria-hidden="true">⌕</span>
+                <input id="code-input" type="text" inputmode="text" placeholder="Code or name — 101, 2*111, kottu" aria-label="Food code, quantity times code, or food name" aria-describedby="search-status" spellcheck="false" />
+                <button type="button" id="clear-search" class="clear-search" aria-label="Clear search and category" title="Clear search (Esc)"><span aria-hidden="true">✕</span><span class="clear-label">Clear</span></button>
+              </div>
+              <button type="submit" class="add-code-button" title="Add code (Enter)">Add <kbd>↵</kbd></button>
+            </form>
+            <div class="quick-extras" aria-label="Quick picks"><span class="quick-extras-title">Quick</span><div id="quick-extras-buttons" class="quick-extras-buttons"></div></div>
+          </div>
+          <nav id="category-filters" class="category-filters" aria-label="Food categories"></nav>
+          <div class="status-line">
+            <div class="feedback-line" id="feedback" aria-live="polite">Loading menu…</div>
+            <div id="search-status" class="search-status" role="status" aria-live="polite"></div>
+          </div>
         </div>
-        <div class="feedback-line" id="feedback" aria-live="polite">Tap any food below to add it to the bill.</div>
-        <div class="quick-extras"><span class="quick-extras-title">QUICK PICKS →</span><div id="quick-extras-buttons" class="quick-extras-buttons"></div></div>
-        <div id="search-status" class="feedback-line" role="status" aria-live="polite"></div>
-        <nav id="category-filters" class="category-filters" aria-label="Food categories"></nav>
         <div id="menu-scroll" class="menu-scroll">
           <div id="menu-groups"></div>
         </div>
       </section>
 
-      <aside class="bill-panel" aria-label="Current bill">
-        <div class="bill-head"><div><span class="bill-eyebrow">CURRENT BILL</span><h2>New Order <span id="bill-mode">• Takeaway</span></h2></div><button class="undo-button" id="undo-button" disabled title="Undo last item">↶ Undo</button></div>
+      <aside class="bill-panel" id="bill-panel" aria-label="Current bill">
+        <div class="bill-head">
+          <div class="bill-title"><h2>Current bill</h2><span id="bill-mode" class="bill-mode">• Takeaway</span></div>
+          <button class="undo-button" id="undo-button" disabled title="Undo last change">↶ Undo</button>
+        </div>
         <div id="bill-items" class="bill-items"><div class="empty-cart"><div class="empty-icon">▤</div><strong>No food added yet</strong><span>කෑමක් තෝරන්න</span></div></div>
         <div class="bill-summary">
-          <div class="summary-top"><span id="bill-units">0 items</span><span id="bill-lines">0 types</span></div>
-          <div class="total-row"><div><span class="total-label">TOTAL BILL</span><small>මුළු මුදල</small></div><div id="bill-total" class="total-number">Rs. 0</div></div>
+          <div class="summary-counts"><span id="bill-units">0 items</span><span id="bill-lines">0 types</span></div>
+          <div class="total-row"><div class="total-label">TOTAL<small>මුළු මුදල</small></div><div id="bill-total" class="total-number">Rs. 0</div></div>
         </div>
         <div class="pay-section">
-          <div class="section-label">HOW WILL CUSTOMER PAY? <span>ගෙවන්නේ කොහොමද?</span></div>
-          <div class="payment-tabs">
-            <button class="payment-btn active" data-payment="Cash">▤ Cash</button>
-            <button class="payment-btn" data-payment="Card">▣ Card</button>
-            <button class="payment-btn" data-payment="QR">▦ QR</button>
+          <div class="payment-tabs" role="group" aria-label="Payment method">
+            <button class="payment-btn active" data-payment="Cash">Cash</button>
+            <button class="payment-btn" data-payment="Card">Card</button>
+            <button class="payment-btn" data-payment="QR">QR</button>
           </div>
           <div id="cash-box" class="cash-box">
-            <div class="cash-top"><label for="cash-received">Cash Received (Rs.)</label><button id="exact-cash" class="exact-btn">EXACT</button></div>
-            <input id="cash-received" type="number" min="0" step="1" placeholder="Enter amount" inputmode="numeric" />
+            <div class="cash-top">
+              <label for="cash-received" class="sr-only">Cash received (Rs.)</label>
+              <input id="cash-received" type="number" min="0" step="1" placeholder="Cash received (F8)" inputmode="numeric" />
+              <button id="exact-cash" class="exact-btn" type="button">EXACT</button>
+            </div>
             <div class="cash-presets"><button data-tender="500">500</button><button data-tender="1000">1,000</button><button data-tender="2000">2,000</button><button data-tender="5000">5,000</button></div>
             <div class="change-line"><span>Balance to give</span><strong id="change-amount">Rs. 0</strong></div>
           </div>
           <div id="external-warning" class="external-warning hidden">Demo only: Card / QR selection simulates checkout. No payment is processed.</div>
-          <button class="complete-btn" id="complete-btn" disabled>✓ TRY DEMO CHECKOUT <span>→</span></button>
-          <button class="cancel-btn" id="cancel-btn">✕ Clear Current Order</button>
+          <div class="checkout-row">
+            <button class="cancel-btn" id="cancel-btn" title="Clear current order">✕ <span>Clear</span></button>
+            <button class="complete-btn" id="complete-btn" disabled>✓ TRY DEMO CHECKOUT <span>→</span></button>
+          </div>
         </div>
       </aside>
-    </div>
-    <footer class="app-footer"><span>QUICK KEYS</span><span><kbd>101</kbd> ↵ Add</span><span><kbd>3*101</kbd> ↵ Quantity</span><span><kbd>F2</kbd> Dine-in/Takeaway</span><span><kbd>F4</kbd> Food Code</span><span><kbd>F8</kbd> Cash</span><span class="footer-right">Customer UI Preview • Powered by ServeGrid POS</span></footer>
+    </main>
+
+    <button type="button" id="mobile-bill-bar" class="mobile-bill-bar" aria-controls="bill-panel"><span id="mobile-bill-count">0 items</span><strong id="mobile-bill-total">Rs. 0</strong><span class="mbb-go">Bill ↓</span></button>
   </div>
 
   <div id="modal-backdrop" class="modal-backdrop hidden" role="presentation"><div id="modal-content" class="modal" role="dialog" aria-modal="true" aria-label="Dialog"></div></div>
   <div id="toast" class="toast hidden" role="status"></div>
   <script src="./demo-api.js?v=owner-menu-1" defer></script>
-  <script src="./app.js?v=owner-menu-1" defer></script>
+  <script src="./app.js?v=compact-1" defer></script>
 </body>
 </html>

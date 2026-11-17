@@ -16,9 +16,27 @@
   const mealLabels = {breakfast:'Breakfast',lunch:'Lunch',dinner:'Dinner'};
   const presetMap = {}; // Hopper sets are individually priced SKUs, not a per-piece multiplication.
   const codeInput = $('code-input');
+  const quickCodes = ['401','202','203','501'];
+  const finePointer = window.matchMedia ? window.matchMedia('(pointer:fine)') : {matches:true};
+  const catSlug = (c) => String(c||'').toLowerCase().replace(/[^a-z]+/g,'-').replace(/^-|-$/g,'');
 
   // Public customer preview uses a browser-only simulator, never the hotel database.
   const api = async (path, method='GET', body=null) => window.BataDemoAPI(path, method, body);
+
+  // Search text without an optional "2*" quantity prefix.
+  function searchQuery(){return codeInput.value.trim().toLowerCase().replace(/^\d{1,3}\s*[x*]\s*/, '').trim();}
+  function searchQty(){const m=codeInput.value.trim().match(/^(\d{1,3})\s*[xX*]/);return m?Number(m[1]):1;}
+  function matchesQuery(food,query){return !query || (/^\d+$/.test(query)?food.code.startsWith(query):food.name.toLowerCase().includes(query));}
+  function highlight(text,query,isCode){
+    const raw=String(text??'');
+    if(!query)return escapeHtml(raw);
+    const at=isCode?(raw.startsWith(query)?0:-1):raw.toLowerCase().indexOf(query);
+    if(at<0)return escapeHtml(raw);
+    return escapeHtml(raw.slice(0,at))+'<mark>'+escapeHtml(raw.slice(at,at+query.length))+'</mark>'+escapeHtml(raw.slice(at+query.length));
+  }
+  // Restartable, purely visual feedback. Never delays the action itself.
+  function flash(el,cls){if(!el)return;el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls);clearTimeout(el._fx);el._fx=setTimeout(()=>el.classList.remove(cls),650);}
+  function refocusSearch(){if(finePointer.matches&&$('modal-backdrop').classList.contains('hidden'))codeInput.focus({preventScroll:true});}
 
   function toast(message) {
     const node=$('toast'); node.textContent=message; node.classList.remove('hidden');
@@ -42,8 +60,10 @@
     state.undo.push({...state.cart}); if(state.undo.length>30)state.undo.shift();
     state.cart[code]=(state.cart[code]||0)+qty;
     invalidatePayment();state.tender='';
-    feedback(`✓ Added ${food.name} × ${qty}   •   එකතු කළා`,'positive');
+    feedback(`✓ Added ${food.name} × ${qty}  (now ${state.cart[code]})  •  එකතු කළා`,'positive');
+    state.lastChanged=code;
     renderCart();
+    document.querySelectorAll(`[data-code="${code}"],[data-quick-code="${code}"]`).forEach(el=>flash(el,'just-added'));
   }
   function changeQty(code, delta) {
     if(state.pending){toast("Order is saving. Please wait.");return;}
@@ -53,6 +73,7 @@
     state.undo.push({...state.cart});if(state.undo.length>30)state.undo.shift();
     if(next<=0)delete state.cart[code];else state.cart[code]=next;
     invalidatePayment();state.tender='';
+    state.lastChanged=next>0?code:null;
     renderCart();
   }
   function undo() {
@@ -65,7 +86,19 @@
     const input=codeInput.value.trim();
     // 3*101 or 3x101, or just 101
     const match=input.match(/^(?:(\d{1,3})\s*[xX*]\s*)?(\d{3})$/);
-    if(!match){feedback('Use a 3-digit food code, e.g. 101 or 3*101','error');codeInput.select();return;}
+    if(!match){
+      // A name search with exactly one available food can also be added with Enter.
+      const query=searchQuery();
+      const hits=query&&!/^\d+$/.test(query)?state.items.filter(x=>x.active&&x.meals.includes(state.meal)&&matchesQuery(x,query)):[];
+      if(hits.length===1){
+        const qty=searchQty(), code=hits[0].code, oldQty=(state.cart[code]||0);
+        addFood(code,qty);
+        if((state.cart[code]||0)>oldQty){codeInput.value='';renderMenu();}
+        return;
+      }
+      feedback(hits.length>1?`${hits.length} foods match — tap one, or type more of the name.`:'Use a 3-digit food code, e.g. 101 or 3*101','error');
+      flash(codeInput.parentElement,'shake');codeInput.select();return;
+    }
     let qty=Number(match[1]||1), code=match[2];
     if(presetMap[code]){qty*=presetMap[code].qty;code=presetMap[code].code;}
     if(!qty||qty>999){feedback('Quantity should be 1 to 999','error');return;}
@@ -74,43 +107,79 @@
     if((state.cart[code]||0)>oldQty){codeInput.value='';renderMenu();}
   }
 
+  const hintsHtml='<span class="hint"><kbd>↵</kbd>add code</span><span class="hint"><kbd>2*111</kbd>qty</span><span class="hint"><kbd>F2</kbd>order type</span><span class="hint"><kbd>F4</kbd>search</span><span class="hint"><kbd>F8</kbd>cash</span><span class="hint"><kbd>Esc</kbd>clear</span>';
   function renderMenu(){
-    const query=codeInput.value.trim().toLowerCase().replace(/^\d{1,3}\s*[x*]\s*/, '').trim();
-    const matches=food=>!query || (/^\d+$/.test(query)?food.code.startsWith(query):food.name.toLowerCase().includes(query));
-    const quick=state.items.filter(x=>x.active && ['401','202','203','501'].includes(x.code) && x.meals.includes(state.meal) && matches(x)).slice(0,4);
-    $("quick-extras-buttons").innerHTML=quick.map(x=>`<button class="quick-extra-btn" data-quick-code="${escapeHtml(x.code)}"><span class="q-code">#${escapeHtml(x.code)}</span> ${escapeHtml(x.name)} <b>+</b></button>`).join("");
-    document.querySelectorAll('.meal-btn').forEach(b=>b.classList.toggle('active',b.dataset.meal===state.meal));
+    const query=searchQuery(), isCode=/^\d+$/.test(query), qty=searchQty();
+    const matches=food=>matchesQuery(food,query);
+    const quick=state.items.filter(x=>x.active && quickCodes.includes(x.code) && x.meals.includes(state.meal) && matches(x)).slice(0,4);
+    $("quick-extras-buttons").innerHTML=quick.map(x=>`<button class="quick-extra-btn" data-quick-code="${escapeHtml(x.code)}" title="Add ${escapeHtml(x.name)} · ${fmt(x.price)}"><span class="q-wrap"><span class="q-code">#${escapeHtml(x.code)}</span> <span class="q-name">${escapeHtml(x.name)}</span></span></button>`).join("");
+    document.querySelectorAll('.meal-btn').forEach(b=>{const on=b.dataset.meal===state.meal;b.classList.toggle('active',on);b.setAttribute('aria-pressed',on);});
     const available=state.items.filter(x=>x.meals.includes(state.meal)&&matches(x));
-    const groups=categoryOrder.filter(c=>available.some(x=>x.category===c));
-    $('category-filters').innerHTML=['All',...groups].map(c=>`<button class="category-filter ${state.category===c?'active':''}" data-category="${escapeHtml(c)}" aria-pressed="${state.category===c}">${escapeHtml(c)}</button>`).join('');
+    const groups=[...categoryOrder.filter(c=>available.some(x=>x.category===c)),...new Set(available.map(x=>x.category).filter(x=>!categoryOrder.includes(x)))];
+    if(state.category!=='All'&&!groups.includes(state.category))state.category='All';
+    $('category-filters').innerHTML=['All',...groups].map(c=>{
+      const n=c==='All'?available.length:available.filter(x=>x.category===c).length;
+      return `<button class="category-filter ${state.category===c?'active':''}" data-category="${escapeHtml(c)}" ${c==='All'?'':`data-cat="${catSlug(c)}"`} aria-pressed="${state.category===c}">${c==='All'?'':'<span class="cat-dot" aria-hidden="true"></span>'}${escapeHtml(categoryLabels[c]||c)}<span class="cat-count">${n}</span></button>`;
+    }).join('');
     const products=available.filter(x=>state.category==='All'||x.category===state.category);
-    $('search-status').textContent=query?`${products.length} matching item${products.length===1?'':'s'} in ${mealLabels[state.meal]} • Tap an item to add, or enter a full code + Enter.`:'';
-    const categories=[...categoryOrder,...new Set(products.map(x=>x.category).filter(x=>!categoryOrder.includes(x)))];
-    const parts=[];
-    for(const category of categories){
-      const foods=products.filter(x=>x.category===category);
-      if(!foods.length)continue;
-      let tiles=[];
-      for(const food of foods){
-        tiles.push(food.active?tile(food,food.code,1,food.name):`<button class="food-tile" disabled><span class="food-code">#${escapeHtml(food.code)}</span><span class="food-name">${escapeHtml(food.name)}</span><span class="food-price">Price to confirm</span></button>`);
-      }
-      parts.push(`<section class="food-section"><div class="food-heading"><span>${escapeHtml(categoryLabels[category]||category)}${category==='String Hoppers'?'<small class="hopper-info">10 / 15 / 20 PCS — SET PRICES</small>':''}</span><small>TOUCH TO ADD +</small></div><div class="food-grid">${tiles.join('')}</div></section>`);
+    // Flat grid in category order: category colour shows grouping without extra heading rows.
+    const ordered=[];
+    for(const category of groups)for(const food of products)if(food.category===category)ordered.push(food);
+    const exact=isCode&&query.length===3?ordered.find(x=>x.code===query&&x.active):null;
+    $('clear-search').dataset.empty=String(!codeInput.value&&state.category==='All');
+    const status=$('search-status');
+    if(!query)status.innerHTML=hintsHtml;
+    else if(exact)status.innerHTML=`<b>↵ Enter</b> adds ${qty>1?qty+' × ':''}<b>${escapeHtml(exact.name)}</b> · ${fmt(exact.price*qty)}`;
+    else if(ordered.length===1&&ordered[0].active&&!isCode)status.innerHTML=`1 match · <b>↵ Enter</b> adds ${qty>1?qty+' × ':''}<b>${escapeHtml(ordered[0].name)}</b>`;
+    else status.innerHTML=ordered.length?`<b>${ordered.length}</b> match${ordered.length===1?'':'es'} in ${escapeHtml(mealLabels[state.meal])}${isCode?' · type all 3 digits + Enter':' · tap to add'}`:'';
+    if(ordered.length){
+      $('menu-groups').innerHTML=`<div class="food-grid">${ordered.map(food=>tile(food,query,isCode,exact)).join('')}</div>`;
+      syncTileBadges();
+      return;
     }
-    $('menu-groups').innerHTML=parts.length?parts.join(''):`<div class="empty-menu">${query?'No matching foods in '+escapeHtml(mealLabels[state.meal])+'.<br><small>Try another code or name, change the meal, or clear the search.</small>':'No foods in '+escapeHtml(mealLabels[state.meal])+' menu.'}</div>`;
+    // Helpful no-result state: offer other meals that do contain the search.
+    let suggest='';
+    if(query){
+      suggest=Object.keys(mealLabels).filter(m=>m!==state.meal).map(m=>{
+        const n=state.items.filter(x=>x.meals.includes(m)&&matchesQuery(x,query)).length;
+        return n?`<button type="button" data-switch-meal="${m}">Show in ${escapeHtml(mealLabels[m])} (${n})</button>`:'';
+      }).join('');
+    }
+    $('menu-groups').innerHTML=`<div class="empty-menu">${query?`<strong>No match for “${escapeHtml(codeInput.value.trim())}” in ${escapeHtml(mealLabels[state.meal])}</strong>Check the code or name, or clear the search (Esc).<div class="suggest">${suggest}<button type="button" data-clear-search>✕ Clear search</button></div>`:'<strong>No foods in '+escapeHtml(mealLabels[state.meal])+' menu.</strong>'}</div>`;
   }
-  function tile(food,code,qty,label){
-    let kind=food.category==='Rice & Curry'?'rice':food.category==='String Hoppers'?'hoppers':food.category==='Bread'?'bread':(food.category==='Extras & Drinks'||food.category==='Beverages')?'extras':'other';
-    return `<button class="food-tile" data-code="${escapeHtml(food.code)}" data-qty="${qty}" data-kind="${kind}" title="Add ${escapeHtml(food.name)} × ${qty}"><span class="food-code">#${escapeHtml(code)}</span><span class="food-plus">+</span><span class="food-name">${escapeHtml(label)}</span><span class="food-price">${qty===1?fmt(food.price):fmt(food.price*qty)}</span></button>`;
+  function tile(food,query,isCode,exact){
+    const cat=catSlug(food.category);
+    const name=highlight(food.name,isCode?'':query,false);
+    const code=highlight(food.code,isCode?query:'',true);
+    if(!food.active)return `<button class="food-tile" data-cat="${cat}" disabled title="${escapeHtml(food.name)} — price to confirm"><span class="food-name">${name}</span><span class="food-meta"><span class="food-code">#${code}</span><span class="food-price">Price to confirm</span></span></button>`;
+    return `<button class="food-tile${exact===food?' is-exact':''}" data-code="${escapeHtml(food.code)}" data-qty="1" data-cat="${cat}" title="Add ${escapeHtml(food.name)} · ${escapeHtml(food.category)}"><span class="food-name">${name}</span><span class="food-meta"><span class="food-code">#${code}</span><span class="food-price">${fmt(food.price)}</span></span><span class="food-qty" aria-label="in bill"></span></button>`;
+  }
+  function syncTileBadges(){
+    document.querySelectorAll('.food-tile[data-code]').forEach(el=>{
+      const q=state.cart[el.dataset.code]||0;
+      el.classList.toggle('in-cart',q>0);
+      const badge=el.querySelector('.food-qty');if(badge)badge.textContent=q?'×'+q:'';
+    });
   }
 
   function renderCart(){
     const rows=cartLines(); const total=billTotal();
     $('bill-mode').textContent='• '+state.service;
     $('undo-button').disabled=state.undo.length===0;
-    $('bill-units').textContent=sumQty().toLocaleString('en-LK')+' items / sets';
+    const units=sumQty();
+    $('bill-units').textContent=units.toLocaleString('en-LK')+' items / sets';
     $('bill-lines').textContent=rows.length+' food types';
-    $('bill-total').textContent=fmt(total);
-    $('bill-items').innerHTML=rows.length ? rows.map(({food,qty})=>`<div class="cart-row" data-cart-code="${escapeHtml(food.code)}"><div class="cart-desc"><strong>${escapeHtml(food.name)}</strong><small>${(food.code>='101'&&food.code<='104')?'Breakfast · ':((food.code>='301'&&food.code<='304')?'Lunch/Dinner · ':'')}${fmt(food.price)} per item/set</small></div><div class="qty-box"><button data-delta="-1" data-code="${escapeHtml(food.code)}" title="Reduce">−</button><span class="qty-count">${qty}</span><button data-delta="1" data-code="${escapeHtml(food.code)}" title="Add one">+</button></div><div class="cart-amount">${fmt(food.price*qty)}</div><button class="remove-line" data-remove="${escapeHtml(food.code)}" title="Remove item">×</button></div>`).join('') : '<div class="empty-cart"><div class="empty-icon">▤</div><strong>No food added yet</strong><span>කෑමක් තෝරන්න</span></div>';
+    const totalNode=$('bill-total'), totalText=fmt(total);
+    if(totalNode.textContent!==totalText){totalNode.textContent=totalText;flash(totalNode,'bump');}
+    $('mobile-bill-count').textContent=units+' item'+(units===1?'':'s');
+    $('mobile-bill-total').textContent=totalText;
+    $('bill-items').innerHTML=rows.length ? rows.map(({food,qty})=>`<div class="cart-row" data-cart-code="${escapeHtml(food.code)}"><div class="cart-desc"><strong title="${escapeHtml(food.name)}">${escapeHtml(food.name)}</strong><small>#${escapeHtml(food.code)} · ${(food.code>='101'&&food.code<='104')?'Breakfast · ':((food.code>='301'&&food.code<='304')?'Lunch/Dinner · ':'')}${fmt(food.price)} each</small></div><div class="qty-box"><button data-delta="-1" data-code="${escapeHtml(food.code)}" title="Reduce" aria-label="Reduce ${escapeHtml(food.name)}">−</button><span class="qty-count">${qty}</span><button data-delta="1" data-code="${escapeHtml(food.code)}" title="Add one" aria-label="Add one ${escapeHtml(food.name)}">+</button></div><div class="cart-amount">${fmt(food.price*qty)}</div><button class="remove-line" data-remove="${escapeHtml(food.code)}" title="Remove item" aria-label="Remove ${escapeHtml(food.name)}">✕</button></div>`).join('') : '<div class="empty-cart"><div class="empty-icon">▤</div><strong>No food added yet</strong><span>කෑමක් තෝරන්න</span></div>';
+    if(state.lastChanged){
+      const row=$('bill-items').querySelector(`[data-cart-code="${state.lastChanged}"]`);
+      if(row){row.classList.add('flash');const box=$('bill-items');if(row.offsetTop<box.scrollTop)box.scrollTop=row.offsetTop;else if(row.offsetTop+row.offsetHeight>box.scrollTop+box.clientHeight)box.scrollTop=row.offsetTop+row.offsetHeight-box.clientHeight;}
+      state.lastChanged=null;
+    }
+    syncTileBadges();
     renderTender();
   }
   function renderTender(){
@@ -125,12 +194,11 @@
     $('complete-btn').innerHTML=state.pending?'Processing…':'✓ TRY DEMO CHECKOUT <span>→</span>';
   }
   function setPayment(payment){if(state.pending)return;state.payment=payment;state.tender='';invalidatePayment();renderTender();}
-  function setMeal(meal){state.category='All';state.meal=meal;renderMenu();feedback(`${mealLabels[meal]} menu selected. Existing order stays in the bill (at its original price).`);$('menu-scroll').scrollTop=0;}
-  function setService(service){if(state.pending)return;state.service=service;document.querySelectorAll('.service-btn').forEach(b=>b.classList.toggle('active',b.dataset.service===service));$('table-area').classList.toggle('hidden',service!=='Dine-in');renderCart();}
+  function setMeal(meal,keepSearch=false){state.category='All';state.meal=meal;if(!keepSearch&&codeInput.value.trim()&&!state.items.some(x=>x.meals.includes(meal)&&matchesQuery(x,searchQuery())))codeInput.value='';renderMenu();feedback(`${mealLabels[meal]} menu selected. Existing order stays in the bill (at its original price).`);$('menu-scroll').scrollTop=0;}
+  function setService(service){if(state.pending)return;state.service=service;document.querySelectorAll('.service-btn').forEach(b=>{const on=b.dataset.service===service;b.classList.toggle('active',on);b.setAttribute('aria-pressed',on);});$('table-area').classList.toggle('hidden',service!=='Dine-in');renderCart();}
   function setDemoBanner(){
     $('demo-banner').classList.toggle('hidden',!state.demoMode);
-    const indicator=document.querySelector('.local-indicator');
-    indicator.innerHTML='<span class="green-dot"></span> '+(state.demoMode?'BATA KADE • DEMO':'BATA KADE • DEMO');
+
   }
   async function refreshState(){
     const data=await api('/api/state');
@@ -237,16 +305,23 @@
 
   // Events — both large touch areas and quick keyboard codes work.
   $('category-filters').addEventListener('click',e=>{const b=e.target.closest('[data-category]');if(b){state.category=b.dataset.category;renderMenu();$('menu-scroll').scrollTop=0;}});
-  $('clear-search').onclick=()=>{codeInput.value='';state.category='All';renderMenu();codeInput.focus();};
-  codeInput.addEventListener('input',()=>{state.category='All';renderMenu();$('menu-scroll').scrollTop=0;});
+  function clearSearch(){codeInput.value='';state.category='All';renderMenu();$('menu-scroll').scrollTop=0;}
+  $('clear-search').onclick=()=>{clearSearch();feedback('Search cleared.');codeInput.focus();};
+  function onSearchInput(){state.category='All';renderMenu();$('menu-scroll').scrollTop=0;}
+  codeInput.addEventListener('input',onSearchInput);
   $('code-form').addEventListener('submit',e=>{e.preventDefault();enterCode();codeInput.focus();});
-  $('quick-extras-buttons').addEventListener('click',e=>{const el=e.target.closest('[data-quick-code]');if(el)addFood(el.dataset.quickCode);});
-  $('menu-groups').addEventListener('click',e=>{const el=e.target.closest('button[data-code]');if(el)addFood(el.dataset.code,Number(el.dataset.qty));});
-  $('bill-items').addEventListener('click',e=>{
-    const ch=e.target.closest('[data-delta]');if(ch)return changeQty(ch.dataset.code,Number(ch.dataset.delta));
-    const del=e.target.closest('[data-remove]');if(del)return changeQty(del.dataset.remove,-999);
+  $('quick-extras-buttons').addEventListener('click',e=>{const el=e.target.closest('[data-quick-code]');if(el){addFood(el.dataset.quickCode);refocusSearch();}});
+  $('menu-groups').addEventListener('click',e=>{
+    const el=e.target.closest('button[data-code]');if(el){addFood(el.dataset.code,Number(el.dataset.qty));refocusSearch();return;}
+    const sw=e.target.closest('[data-switch-meal]');if(sw){setMeal(sw.dataset.switchMeal,true);refocusSearch();return;}
+    if(e.target.closest('[data-clear-search]')){clearSearch();codeInput.focus();}
   });
-  $('undo-button').onclick=undo;
+  $('mobile-bill-bar').onclick=()=>$('bill-panel').scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+  $('bill-items').addEventListener('click',e=>{
+    const ch=e.target.closest('[data-delta]');if(ch){changeQty(ch.dataset.code,Number(ch.dataset.delta));return refocusSearch();}
+    const del=e.target.closest('[data-remove]');if(del){changeQty(del.dataset.remove,-999);return refocusSearch();}
+  });
+  $('undo-button').onclick=()=>{undo();refocusSearch();};
   $('complete-btn').onclick=completeOrder;
   $('cancel-btn').onclick=cancelOrder;
   $('exact-cash').onclick=()=>{state.tender=String(billTotal());renderTender();};
@@ -256,7 +331,7 @@
   document.querySelectorAll('[data-service]').forEach(b=>b.onclick=()=>setService(b.dataset.service));
   document.querySelectorAll('[data-payment]').forEach(b=>b.onclick=()=>setPayment(b.dataset.payment));
   const previewHelp = () => openModal(modalHeader('BATA KADE — Customer Preview', 'Try the food-ordering workflow on a touchscreen or keyboard') +
-    `<div class="preview-help"><p><b>1.</b> Tap Chicken Rice, String Hoppers 10/15/20, Fried Rice, Kottu or a drink. Each String Hoppers button adds one priced set. You can also enter <kbd>101</kbd> for breakfast chicken rice or <kbd>301</kbd> for lunch chicken rice and press Enter.</p><p><b>2.</b> Choose Takeaway or Dine-in. Change quantities using + / − on the bill.</p><p><b>3.</b> Tap EXACT to simulate cash payment, then <b>TRY DEMO CHECKOUT</b>. You can see a sample receipt and try a new order.</p><p class="preview-help-note">This is a visual demonstration only. Listed prices come from the customer menu, but no real payment is taken, and orders stay in this browser tab. The installed Windows POS uses a separate local database and actual hotel menu settings.</p></div>`);
+    `<div class="preview-help"><p><b>1.</b> Tap Chicken Rice, String Hoppers 10/15/20, Fried Rice, Kottu or a drink. Each String Hoppers button adds one priced set. You can also enter <kbd>101</kbd> for breakfast chicken rice or <kbd>301</kbd> for lunch chicken rice and press Enter.</p><p><b>Search:</b> type part of a code or name to filter. A full code + Enter adds it; <kbd>2*111</kbd> + Enter adds two. If only one food matches a name, Enter adds it. <kbd>Esc</kbd> clears, <kbd>F2</kbd> toggles Dine-in/Takeaway, <kbd>F4</kbd> focuses search, <kbd>F8</kbd> focuses cash.</p><p><b>2.</b> Choose Takeaway or Dine-in. Change quantities using + / − on the bill.</p><p><b>3.</b> Tap EXACT to simulate cash payment, then <b>TRY DEMO CHECKOUT</b>. You can see a sample receipt and try a new order.</p><p class="preview-help-note">This is a visual demonstration only. Listed prices come from the customer menu, but no real payment is taken, and orders stay in this browser tab. Owner menu updated 17 Nov 2026. The installed Windows POS uses a separate local database and actual hotel menu settings.</p></div>`);
   $('open-owner').onclick=previewHelp;$('banner-owner').onclick=previewHelp;$('open-orders').onclick=ordersModal;
   $('modal-backdrop').addEventListener('click',e=>{if(e.target===$('modal-backdrop')||e.target.closest('[data-close]'))closeModal();});
   $('modal-content').addEventListener('click',async(e)=>{
@@ -294,7 +369,7 @@
     if(e.ctrlKey||e.metaKey||e.altKey)return;
     const hasModal=!$('modal-backdrop').classList.contains('hidden');
     if(e.key==='Escape'){
-      if(hasModal)closeModal();else{codeInput.value='';state.category='All';renderMenu();feedback('Search cleared.');}
+      if(hasModal)closeModal();else{clearSearch();feedback('Search cleared.');codeInput.focus();}
       e.preventDefault();return;
     }
     if(hasModal)return;
@@ -303,8 +378,8 @@
     if(e.key==='F4'){e.preventDefault();codeInput.focus();return;}
     if(e.key==='F8'){e.preventDefault();setPayment('Cash');$('cash-received').focus();return;}
     if(active&&['INPUT','TEXTAREA','SELECT'].includes(active.tagName))return;
-    if(/^[0-9*xX]$/.test(e.key)){
-      e.preventDefault();codeInput.focus();codeInput.value+=e.key;renderMenu();
+    if(/^[0-9*a-zA-Z]$/.test(e.key)){
+      e.preventDefault();codeInput.focus();codeInput.value+=e.key;onSearchInput();
     }else if(e.key==='Enter'&&codeInput.value.trim()){
       e.preventDefault();enterCode();codeInput.focus();
     }
