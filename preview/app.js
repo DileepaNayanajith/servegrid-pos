@@ -6,13 +6,13 @@
   const escapeHtml = (s) => String(s ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const fmt = (value) => 'Rs. ' + Number(value || 0).toLocaleString('en-LK');
   const state = {
-    items:[], meal:'breakfast', service:'Takeaway', payment:'Cash', cart:{},
+    items:[], category:'All', meal:'breakfast', service:'Takeaway', payment:'Cash', cart:{},
     tender:'', feedback:'', undo:[], lastOrder:null, pending:false, orderKey:null,
     demoMode:true, adminConfigured:false, adminLoggedIn:false, adminTab:'menu',
     orders:[], sales:{count:0,total:0}, adminError:'', confirmedExternal:false
   };
-  const categoryOrder = ['Rice & Curry','String Hoppers','Bread','Fried Rice','Kottu','Other Foods','Short Eats','Beverages','Extras & Drinks'];
-  const categoryLabels = {'Rice & Curry':'RICE & CURRY','String Hoppers':'STRING HOPPERS','Bread':'BREAD & PORTIONS','Other Foods':'MORE BREAKFAST FOOD','Extras & Drinks':'EXTRAS', 'Fried Rice':'FRIED RICE', 'Kottu':'KOTTU', 'Short Eats':'SHORT EATS', 'Beverages':'TEA • COFFEE • DRINKS'};
+  const categoryOrder = ['Rice & Curry','Bread Kottu','Breakfast Foods','String Hoppers','Short Eats','Fried Rice','Kottu','Water','Hot Drinks','Soft Drinks','Desserts'];
+  const categoryLabels = {};
   const mealLabels = {breakfast:'Breakfast',lunch:'Lunch',dinner:'Dinner'};
   const presetMap = {}; // Hopper sets are individually priced SKUs, not a per-piece multiplication.
   const codeInput = $('code-input');
@@ -77,10 +77,13 @@
   function renderMenu(){
     const query=codeInput.value.trim().toLowerCase().replace(/^\d{1,3}\s*[x*]\s*/, '').trim();
     const matches=food=>!query || (/^\d+$/.test(query)?food.code.startsWith(query):food.name.toLowerCase().includes(query));
-    const quick=state.items.filter(x=>x.active && x.category==="Beverages" && x.meals.includes(state.meal) && matches(x)).slice(0,4);
+    const quick=state.items.filter(x=>x.active && ['401','202','203','501'].includes(x.code) && x.meals.includes(state.meal) && matches(x)).slice(0,4);
     $("quick-extras-buttons").innerHTML=quick.map(x=>`<button class="quick-extra-btn" data-quick-code="${escapeHtml(x.code)}"><span class="q-code">#${escapeHtml(x.code)}</span> ${escapeHtml(x.name)} <b>+</b></button>`).join("");
     document.querySelectorAll('.meal-btn').forEach(b=>b.classList.toggle('active',b.dataset.meal===state.meal));
-    const products=state.items.filter(x=>x.active&&x.meals.includes(state.meal)&&matches(x));
+    const available=state.items.filter(x=>x.meals.includes(state.meal)&&matches(x));
+    const groups=categoryOrder.filter(c=>available.some(x=>x.category===c));
+    $('category-filters').innerHTML=['All',...groups].map(c=>`<button class="category-filter ${state.category===c?'active':''}" data-category="${escapeHtml(c)}" aria-pressed="${state.category===c}">${escapeHtml(c)}</button>`).join('');
+    const products=available.filter(x=>state.category==='All'||x.category===state.category);
     $('search-status').textContent=query?`${products.length} matching item${products.length===1?'':'s'} in ${mealLabels[state.meal]} • Tap an item to add, or enter a full code + Enter.`:'';
     const categories=[...categoryOrder,...new Set(products.map(x=>x.category).filter(x=>!categoryOrder.includes(x)))];
     const parts=[];
@@ -89,7 +92,7 @@
       if(!foods.length)continue;
       let tiles=[];
       for(const food of foods){
-        tiles.push(tile(food,food.code,1,food.name));
+        tiles.push(food.active?tile(food,food.code,1,food.name):`<button class="food-tile" disabled><span class="food-code">#${escapeHtml(food.code)}</span><span class="food-name">${escapeHtml(food.name)}</span><span class="food-price">Price to confirm</span></button>`);
       }
       parts.push(`<section class="food-section"><div class="food-heading"><span>${escapeHtml(categoryLabels[category]||category)}${category==='String Hoppers'?'<small class="hopper-info">10 / 15 / 20 PCS — SET PRICES</small>':''}</span><small>TOUCH TO ADD +</small></div><div class="food-grid">${tiles.join('')}</div></section>`);
     }
@@ -122,7 +125,7 @@
     $('complete-btn').innerHTML=state.pending?'Processing…':'✓ TRY DEMO CHECKOUT <span>→</span>';
   }
   function setPayment(payment){if(state.pending)return;state.payment=payment;state.tender='';invalidatePayment();renderTender();}
-  function setMeal(meal){state.meal=meal;renderMenu();feedback(`${mealLabels[meal]} menu selected. Existing order stays in the bill (at its original price).`);$('menu-scroll').scrollTop=0;}
+  function setMeal(meal){state.category='All';state.meal=meal;renderMenu();feedback(`${mealLabels[meal]} menu selected. Existing order stays in the bill (at its original price).`);$('menu-scroll').scrollTop=0;}
   function setService(service){if(state.pending)return;state.service=service;document.querySelectorAll('.service-btn').forEach(b=>b.classList.toggle('active',b.dataset.service===service));$('table-area').classList.toggle('hidden',service!=='Dine-in');renderCart();}
   function setDemoBanner(){
     $('demo-banner').classList.toggle('hidden',!state.demoMode);
@@ -233,7 +236,9 @@
   function printHistory(orderId){const o=state.orders.find(x=>x.id===orderId);if(o)printOrder(o);}
 
   // Events — both large touch areas and quick keyboard codes work.
-  codeInput.addEventListener('input',()=>{renderMenu();$('menu-scroll').scrollTop=0;});
+  $('category-filters').addEventListener('click',e=>{const b=e.target.closest('[data-category]');if(b){state.category=b.dataset.category;renderMenu();$('menu-scroll').scrollTop=0;}});
+  $('clear-search').onclick=()=>{codeInput.value='';state.category='All';renderMenu();codeInput.focus();};
+  codeInput.addEventListener('input',()=>{state.category='All';renderMenu();$('menu-scroll').scrollTop=0;});
   $('code-form').addEventListener('submit',e=>{e.preventDefault();enterCode();codeInput.focus();});
   $('quick-extras-buttons').addEventListener('click',e=>{const el=e.target.closest('[data-quick-code]');if(el)addFood(el.dataset.quickCode);});
   $('menu-groups').addEventListener('click',e=>{const el=e.target.closest('button[data-code]');if(el)addFood(el.dataset.code,Number(el.dataset.qty));});
@@ -289,7 +294,7 @@
     if(e.ctrlKey||e.metaKey||e.altKey)return;
     const hasModal=!$('modal-backdrop').classList.contains('hidden');
     if(e.key==='Escape'){
-      if(hasModal)closeModal();else{codeInput.value='';renderMenu();feedback('Search cleared.');}
+      if(hasModal)closeModal();else{codeInput.value='';state.category='All';renderMenu();feedback('Search cleared.');}
       e.preventDefault();return;
     }
     if(hasModal)return;

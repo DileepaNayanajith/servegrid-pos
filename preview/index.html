@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive" />
   <title>BATA KADE | Touchscreen POS Preview</title>
   <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="./style.css?v=owner-menu-1" />
 </head>
 <body>
   <div class="app-shell">
@@ -21,7 +21,7 @@
       </div>
     </header>
 
-    <div id="demo-banner" class="demo-banner"><strong>UI PREVIEW ONLY</strong><span>BATA KADE • Prices imported from customer menu (21 Oct 2026). DEMO only — no real orders or payments.</span><button id="banner-owner">How to test →</button></div>
+    <div id="demo-banner" class="demo-banner"><strong>UI PREVIEW ONLY</strong><span>BATA KADE • Owner menu updated 17 Nov 2026. DEMO only — no real orders or payments.</span><button id="banner-owner">How to test →</button></div>
 
     <div class="main-toolbar">
       <div class="toolbar-block meal-block">
@@ -50,12 +50,13 @@
           <div class="code-description"><strong>Food Code / Search</strong><small>Type code or name to filter • Enter code to add</small></div>
           <form id="code-form" class="code-form" autocomplete="off">
             <input id="code-input" type="text" inputmode="text" placeholder="Code or food name" aria-label="Food code or quantity times code" />
-            <button type="submit" class="add-code-button">+ ADD</button>
+            <button type="submit" class="add-code-button">+ ADD</button><button type="button" id="clear-search" class="add-code-button" aria-label="Clear search and category">Clear</button>
           </form>
         </div>
         <div class="feedback-line" id="feedback" aria-live="polite">Tap any food below to add it to the bill.</div>
-        <div class="quick-extras"><span class="quick-extras-title">QUICK DRINKS →</span><div id="quick-extras-buttons" class="quick-extras-buttons"></div></div>
+        <div class="quick-extras"><span class="quick-extras-title">QUICK PICKS →</span><div id="quick-extras-buttons" class="quick-extras-buttons"></div></div>
         <div id="search-status" class="feedback-line" role="status" aria-live="polite"></div>
+        <nav id="category-filters" class="category-filters" aria-label="Food categories"></nav>
         <div id="menu-scroll" class="menu-scroll">
           <div id="menu-groups"></div>
         </div>
@@ -92,7 +93,7 @@
 
   <div id="modal-backdrop" class="modal-backdrop hidden" role="presentation"><div id="modal-content" class="modal" role="dialog" aria-modal="true" aria-label="Dialog"></div></div>
   <div id="toast" class="toast hidden" role="status"></div>
-  <script src="./demo-api.js" defer></script>
-  <script src="./app.js?v=food-search-1" defer></script>
+  <script src="./demo-api.js?v=owner-menu-1" defer></script>
+  <script src="./app.js?v=owner-menu-1" defer></script>
 </body>
 </html>

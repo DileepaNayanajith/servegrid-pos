@@ -1,29 +1,24 @@
 {
-  "source_url": "https://theek23.github.io/batakade-menu/",
-  "source_repository": "https://github.com/theek23/batakade-menu",
-  "retrieved": "2026-10-21",
+  "retrieved": "2026-11-17",
   "notes": [
-    "Customer JSON lists breakfast and lunch/dinner separately; rice codes 101-104 and 301-304 distinguish their different prices.",
-    "String hopper 10/15/20 portions are separate priced products; quantity 2 means two sets.",
-    "Nescafe / Nestomalt / Milo are combined at Rs. 120 in the source; displayed separately at that common price.",
-    "Items without source prices remain inactive until confirmed."
+    "Owner supplied menu. Lunch prices also used for Dinner pending confirmation. Kottu is offered at lunch/dinner. Breakfast-only foods stay in Breakfast. Drinks and desserts appear in all meals. Unconfirmed prices are disabled. Milk Tea type remains to confirm. Codes 311/312 now refer to vegetable fried rice as listed by owner. Existing databases are not overwritten."
   ],
   "items": [
     {
-      "code": "101",
-      "name": "Chicken Rice & Curry",
-      "price": 280,
+      "code": "104",
+      "name": "Vegetable Rice",
+      "price": 200,
       "category": "Rice & Curry",
       "meals": [
         "breakfast"
       ],
       "sort": 1,
       "active": true,
-      "source": "customer"
+      "source": "owner"
     },
     {
-      "code": "102",
-      "name": "Fish Rice & Curry",
+      "code": "103",
+      "name": "Egg Rice",
       "price": 230,
       "category": "Rice & Curry",
       "meals": [
@@ -31,159 +26,199 @@
       ],
       "sort": 2,
       "active": true,
-      "source": "customer"
+      "source": "owner"
     },
     {
-      "code": "103",
-      "name": "Egg Rice & Curry",
-      "price": 230,
+      "code": "102",
+      "name": "Fish Rice",
+      "price": 250,
       "category": "Rice & Curry",
       "meals": [
         "breakfast"
       ],
       "sort": 3,
       "active": true,
-      "source": "customer"
+      "source": "owner"
     },
     {
-      "code": "104",
-      "name": "Vegetable Rice & Curry",
-      "price": 180,
+      "code": "101",
+      "name": "Chicken Rice",
+      "price": 300,
       "category": "Rice & Curry",
       "meals": [
         "breakfast"
       ],
       "sort": 4,
       "active": true,
-      "source": "customer"
+      "source": "owner"
     },
     {
-      "code": "111",
-      "name": "String Hoppers - 10 pcs",
-      "price": 120,
-      "category": "String Hoppers",
+      "code": "131",
+      "name": "Plain Bread Kottu",
+      "price": 150,
+      "category": "Bread Kottu",
       "meals": [
         "breakfast"
       ],
       "sort": 5,
       "active": true,
-      "source": "customer"
+      "source": "owner"
     },
     {
-      "code": "112",
-      "name": "String Hoppers - 15 pcs",
-      "price": 160,
-      "category": "String Hoppers",
+      "code": "132",
+      "name": "Egg Bread Kottu",
+      "price": 200,
+      "category": "Bread Kottu",
       "meals": [
         "breakfast"
       ],
       "sort": 6,
       "active": true,
-      "source": "customer"
+      "source": "owner"
     },
     {
-      "code": "113",
-      "name": "String Hoppers - 20 pcs",
-      "price": 200,
-      "category": "String Hoppers",
+      "code": "133",
+      "name": "Fish Bread Kottu",
+      "price": 250,
+      "category": "Bread Kottu",
       "meals": [
         "breakfast"
       ],
       "sort": 7,
       "active": true,
-      "source": "customer"
+      "source": "owner"
     },
     {
-      "code": "124",
-      "name": "Bread 1/2 + Gravy",
-      "price": 220,
-      "category": "Bread",
+      "code": "134",
+      "name": "Chicken Bread Kottu",
+      "price": 270,
+      "category": "Bread Kottu",
       "meals": [
         "breakfast"
       ],
       "sort": 8,
       "active": true,
-      "source": "customer"
+      "source": "owner"
     },
     {
       "code": "126",
-      "name": "Milk Rice - 1 Piece",
+      "name": "Milk Rice (Kiribath)",
       "price": 100,
-      "category": "Other Foods",
+      "category": "Breakfast Foods",
       "meals": [
         "breakfast"
       ],
       "sort": 9,
       "active": true,
-      "source": "customer"
+      "source": "owner"
     },
     {
-      "code": "127",
-      "name": "Noodles",
-      "price": 160,
-      "category": "Other Foods",
+      "code": "128",
+      "name": "Pol Roti",
+      "price": 60,
+      "category": "Breakfast Foods",
       "meals": [
         "breakfast"
       ],
       "sort": 10,
       "active": true,
-      "source": "customer"
+      "source": "owner"
     },
     {
-      "code": "121",
-      "name": "Parata Roti",
-      "price": 60,
-      "category": "Short Eats",
+      "code": "129",
+      "name": "Green Gram / Chickpeas",
+      "price": 150,
+      "category": "Breakfast Foods",
       "meals": [
-        "breakfast",
-        "lunch",
-        "dinner"
+        "breakfast"
       ],
       "sort": 11,
       "active": true,
-      "source": "customer"
+      "source": "owner"
+    },
+    {
+      "code": "127",
+      "name": "Noodles",
+      "price": 160,
+      "category": "Breakfast Foods",
+      "meals": [
+        "breakfast"
+      ],
+      "sort": 12,
+      "active": true,
+      "source": "owner"
+    },
+    {
+      "code": "111",
+      "name": "String Hoppers (10)",
+      "price": 120,
+      "category": "String Hoppers",
+      "meals": [
+        "breakfast"
+      ],
+      "sort": 13,
+      "active": true,
+      "source": "owner"
+    },
+    {
+      "code": "112",
+      "name": "String Hoppers (15)",
+      "price": 160,
+      "category": "String Hoppers",
+      "meals": [
+        "breakfast"
+      ],
+      "sort": 14,
+      "active": true,
+      "source": "owner"
+    },
+    {
+      "code": "113",
+      "name": "String Hoppers (20)",
+      "price": 200,
+      "category": "String Hoppers",
+      "meals": [
+        "breakfast"
+      ],
+      "sort": 15,
+      "active": true,
+      "source": "owner"
     },
     {
       "code": "122",
       "name": "Egg Roti",
-      "price": 80,
-      "category": "Short Eats",
-      "meals": [
-        "breakfast",
-        "lunch",
-        "dinner"
-      ],
-      "sort": 12,
-      "active": true,
-      "source": "customer"
-    },
-    {
-      "code": "211",
-      "name": "Egg Rolls",
       "price": 100,
       "category": "Short Eats",
       "meals": [
-        "breakfast",
-        "lunch",
-        "dinner"
+        "breakfast"
       ],
-      "sort": 13,
+      "sort": 16,
       "active": true,
-      "source": "customer"
+      "source": "owner"
     },
     {
-      "code": "212",
-      "name": "Fish Rolls",
-      "price": 100,
+      "code": "135",
+      "name": "Egg Rotti with Curry",
+      "price": 120,
       "category": "Short Eats",
       "meals": [
-        "breakfast",
-        "lunch",
-        "dinner"
+        "breakfast"
       ],
-      "sort": 14,
+      "sort": 17,
       "active": true,
-      "source": "customer"
+      "source": "owner"
+    },
+    {
+      "code": "121",
+      "name": "Paratha Roti",
+      "price": 60,
+      "category": "Short Eats",
+      "meals": [
+        "breakfast"
+      ],
+      "sort": 18,
+      "active": true,
+      "source": "owner"
     },
     {
       "code": "213",
@@ -191,172 +226,102 @@
       "price": 80,
       "category": "Short Eats",
       "meals": [
-        "breakfast",
-        "lunch",
-        "dinner"
-      ],
-      "sort": 15,
-      "active": true,
-      "source": "customer"
-    },
-    {
-      "code": "214",
-      "name": "Wadei",
-      "price": 30,
-      "category": "Short Eats",
-      "meals": [
-        "breakfast",
-        "lunch",
-        "dinner"
-      ],
-      "sort": 16,
-      "active": true,
-      "source": "customer"
-    },
-    {
-      "code": "215",
-      "name": "Ulundu Wadei",
-      "price": 60,
-      "category": "Short Eats",
-      "meals": [
-        "breakfast",
-        "lunch",
-        "dinner"
-      ],
-      "sort": 17,
-      "active": true,
-      "source": "customer"
-    },
-    {
-      "code": "204",
-      "name": "Plain Tea",
-      "price": 50,
-      "category": "Beverages",
-      "meals": [
-        "breakfast",
-        "lunch",
-        "dinner"
-      ],
-      "sort": 18,
-      "active": true,
-      "source": "customer"
-    },
-    {
-      "code": "202",
-      "name": "Milk Tea",
-      "price": 100,
-      "category": "Beverages",
-      "meals": [
-        "breakfast",
-        "lunch",
-        "dinner"
+        "breakfast"
       ],
       "sort": 19,
       "active": true,
-      "source": "customer"
+      "source": "owner"
     },
     {
-      "code": "205",
-      "name": "Plain Coffee",
-      "price": 60,
-      "category": "Beverages",
+      "code": "214",
+      "name": "Parippu Wade",
+      "price": 30,
+      "category": "Short Eats",
       "meals": [
-        "breakfast",
-        "lunch",
-        "dinner"
+        "breakfast"
       ],
       "sort": 20,
       "active": true,
-      "source": "customer"
+      "source": "owner"
     },
     {
-      "code": "206",
-      "name": "Milk Coffee",
-      "price": 130,
-      "category": "Beverages",
+      "code": "215",
+      "name": "Ulundu Wade",
+      "price": 60,
+      "category": "Short Eats",
       "meals": [
-        "breakfast",
-        "lunch",
-        "dinner"
+        "breakfast"
       ],
       "sort": 21,
       "active": true,
-      "source": "customer"
+      "source": "owner"
     },
     {
-      "code": "203",
-      "name": "Nestomalt",
-      "price": 120,
-      "category": "Beverages",
+      "code": "216",
+      "name": "Ulundu Wade with Curry",
+      "price": 70,
+      "category": "Short Eats",
       "meals": [
-        "breakfast",
-        "lunch",
-        "dinner"
+        "breakfast"
       ],
       "sort": 22,
       "active": true,
-      "source": "customer"
+      "source": "owner"
     },
     {
-      "code": "207",
-      "name": "Nescafe",
-      "price": 120,
-      "category": "Beverages",
+      "code": "211",
+      "name": "Egg Roll",
+      "price": 100,
+      "category": "Short Eats",
       "meals": [
-        "breakfast",
-        "lunch",
-        "dinner"
+        "breakfast"
       ],
       "sort": 23,
       "active": true,
-      "source": "customer"
+      "source": "owner"
     },
     {
-      "code": "208",
-      "name": "Milo",
-      "price": 120,
-      "category": "Beverages",
+      "code": "212",
+      "name": "Fish Roll",
+      "price": 100,
+      "category": "Short Eats",
       "meals": [
-        "breakfast",
-        "lunch",
-        "dinner"
+        "breakfast"
       ],
       "sort": 24,
       "active": true,
-      "source": "customer"
+      "source": "owner"
     },
     {
-      "code": "209",
-      "name": "Soft Drink - Buddy",
-      "price": 100,
-      "category": "Beverages",
+      "code": "304",
+      "name": "Vegetable Rice",
+      "price": 220,
+      "category": "Rice & Curry",
       "meals": [
-        "breakfast",
         "lunch",
         "dinner"
       ],
       "sort": 25,
       "active": true,
-      "source": "customer"
+      "source": "owner"
     },
     {
-      "code": "210",
-      "name": "Soft Drink - Medium",
-      "price": 120,
-      "category": "Beverages",
+      "code": "302",
+      "name": "Fish Rice",
+      "price": 300,
+      "category": "Rice & Curry",
       "meals": [
-        "breakfast",
         "lunch",
         "dinner"
       ],
       "sort": 26,
       "active": true,
-      "source": "customer"
+      "source": "owner"
     },
     {
-      "code": "301",
-      "name": "Chicken Rice & Curry",
-      "price": 350,
+      "code": "303",
+      "name": "Egg Rice",
+      "price": 280,
       "category": "Rice & Curry",
       "meals": [
         "lunch",
@@ -364,12 +329,12 @@
       ],
       "sort": 27,
       "active": true,
-      "source": "customer"
+      "source": "owner"
     },
     {
-      "code": "302",
-      "name": "Fish Rice & Curry",
-      "price": 250,
+      "code": "301",
+      "name": "Chicken Rice",
+      "price": 350,
       "category": "Rice & Curry",
       "meals": [
         "lunch",
@@ -377,12 +342,12 @@
       ],
       "sort": 28,
       "active": true,
-      "source": "customer"
+      "source": "owner"
     },
     {
-      "code": "303",
-      "name": "Egg Rice & Curry",
-      "price": 250,
+      "code": "305",
+      "name": "Special Rice",
+      "price": 330,
       "category": "Rice & Curry",
       "meals": [
         "lunch",
@@ -390,25 +355,26 @@
       ],
       "sort": 29,
       "active": true,
-      "source": "customer"
+      "source": "owner"
     },
     {
-      "code": "304",
-      "name": "Vegetable Rice & Curry",
-      "price": 200,
+      "code": "317",
+      "name": "Biryani",
+      "price": 0,
       "category": "Rice & Curry",
       "meals": [
         "lunch",
         "dinner"
       ],
       "sort": 30,
-      "active": true,
-      "source": "customer"
+      "active": false,
+      "source": "owner",
+      "note": "Price to confirm"
     },
     {
       "code": "311",
-      "name": "Egg Fried Rice - Half",
-      "price": 300,
+      "name": "Vegetable Fried Rice (Half)",
+      "price": 400,
       "category": "Fried Rice",
       "meals": [
         "lunch",
@@ -416,12 +382,12 @@
       ],
       "sort": 31,
       "active": true,
-      "source": "customer"
+      "source": "owner"
     },
     {
       "code": "312",
-      "name": "Egg Fried Rice - Full",
-      "price": 500,
+      "name": "Vegetable Fried Rice (Full)",
+      "price": 650,
       "category": "Fried Rice",
       "meals": [
         "lunch",
@@ -429,12 +395,12 @@
       ],
       "sort": 32,
       "active": true,
-      "source": "customer"
+      "source": "owner"
     },
     {
       "code": "313",
-      "name": "Chicken Fried Rice - Half",
-      "price": 350,
+      "name": "Chicken Fried Rice (Half)",
+      "price": 450,
       "category": "Fried Rice",
       "meals": [
         "lunch",
@@ -442,12 +408,12 @@
       ],
       "sort": 33,
       "active": true,
-      "source": "customer"
+      "source": "owner"
     },
     {
       "code": "314",
-      "name": "Chicken Fried Rice - Full",
-      "price": 600,
+      "name": "Chicken Fried Rice (Full)",
+      "price": 750,
       "category": "Fried Rice",
       "meals": [
         "lunch",
@@ -455,12 +421,12 @@
       ],
       "sort": 34,
       "active": true,
-      "source": "customer"
+      "source": "owner"
     },
     {
       "code": "315",
-      "name": "Mix Fried Rice - Half",
-      "price": 500,
+      "name": "Mixed Fried Rice (Half)",
+      "price": 600,
       "category": "Fried Rice",
       "meals": [
         "lunch",
@@ -468,12 +434,12 @@
       ],
       "sort": 35,
       "active": true,
-      "source": "customer"
+      "source": "owner"
     },
     {
       "code": "316",
-      "name": "Mix Fried Rice - Full",
-      "price": 700,
+      "name": "Mixed Fried Rice (Full)",
+      "price": 1200,
       "category": "Fried Rice",
       "meals": [
         "lunch",
@@ -481,25 +447,25 @@
       ],
       "sort": 36,
       "active": true,
-      "source": "customer"
+      "source": "owner"
     },
     {
-      "code": "317",
-      "name": "Biriyani",
+      "code": "321",
+      "name": "Egg Kottu (Half)",
       "price": 450,
-      "category": "Other Foods",
+      "category": "Kottu",
       "meals": [
         "lunch",
         "dinner"
       ],
       "sort": 37,
       "active": true,
-      "source": "customer"
+      "source": "owner"
     },
     {
-      "code": "321",
-      "name": "Egg Kottu - Half",
-      "price": 400,
+      "code": "322",
+      "name": "Egg Kottu (Full)",
+      "price": 650,
       "category": "Kottu",
       "meals": [
         "lunch",
@@ -507,12 +473,12 @@
       ],
       "sort": 38,
       "active": true,
-      "source": "customer"
+      "source": "owner"
     },
     {
-      "code": "322",
-      "name": "Egg Kottu - Full",
-      "price": 600,
+      "code": "323",
+      "name": "Chicken Kottu (Half)",
+      "price": 500,
       "category": "Kottu",
       "meals": [
         "lunch",
@@ -520,12 +486,12 @@
       ],
       "sort": 39,
       "active": true,
-      "source": "customer"
+      "source": "owner"
     },
     {
-      "code": "323",
-      "name": "Chicken Kottu - Half",
-      "price": 450,
+      "code": "324",
+      "name": "Chicken Kottu (Full)",
+      "price": 800,
       "category": "Kottu",
       "meals": [
         "lunch",
@@ -533,70 +499,345 @@
       ],
       "sort": 40,
       "active": true,
-      "source": "customer"
+      "source": "owner"
     },
     {
-      "code": "324",
-      "name": "Chicken Kottu - Full",
-      "price": 650,
-      "category": "Kottu",
+      "code": "401",
+      "name": "Water Bottle 500ml",
+      "price": 80,
+      "category": "Water",
       "meals": [
+        "breakfast",
         "lunch",
         "dinner"
       ],
       "sort": 41,
       "active": true,
-      "source": "customer"
+      "source": "owner"
     },
     {
-      "code": "110",
-      "name": "String Hoppers - 1 pc",
-      "price": 0,
-      "category": "String Hoppers",
+      "code": "402",
+      "name": "Water Bottle 1L",
+      "price": 120,
+      "category": "Water",
       "meals": [
-        "breakfast"
+        "breakfast",
+        "lunch",
+        "dinner"
       ],
       "sort": 42,
-      "active": false,
-      "source": "unconfirmed"
+      "active": true,
+      "source": "owner"
     },
     {
-      "code": "123",
-      "name": "Bread 1/4",
-      "price": 0,
-      "category": "Bread",
+      "code": "403",
+      "name": "Water Bottle 1.5L",
+      "price": 150,
+      "category": "Water",
       "meals": [
-        "breakfast"
+        "breakfast",
+        "lunch",
+        "dinner"
       ],
       "sort": 43,
-      "active": false,
-      "source": "unconfirmed"
+      "active": true,
+      "source": "owner"
     },
     {
-      "code": "125",
-      "name": "Bread - Full",
-      "price": 0,
-      "category": "Bread",
+      "code": "202",
+      "name": "Milk Tea (type to confirm)",
+      "price": 100,
+      "category": "Hot Drinks",
       "meals": [
-        "breakfast"
+        "breakfast",
+        "lunch",
+        "dinner"
       ],
       "sort": 44,
-      "active": false,
-      "source": "unconfirmed"
+      "active": true,
+      "source": "owner"
     },
     {
-      "code": "201",
-      "name": "Egg (Extra)",
-      "price": 0,
-      "category": "Extras & Drinks",
+      "code": "203",
+      "name": "Nestomalt",
+      "price": 180,
+      "category": "Hot Drinks",
       "meals": [
         "breakfast",
         "lunch",
         "dinner"
       ],
       "sort": 45,
+      "active": true,
+      "source": "owner"
+    },
+    {
+      "code": "411",
+      "name": "Pepsi 400ml",
+      "price": 200,
+      "category": "Soft Drinks",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 46,
+      "active": true,
+      "source": "owner"
+    },
+    {
+      "code": "412",
+      "name": "Coca-Cola 400ml",
+      "price": 200,
+      "category": "Soft Drinks",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 47,
+      "active": true,
+      "source": "owner"
+    },
+    {
+      "code": "413",
+      "name": "Sprite 400ml",
+      "price": 200,
+      "category": "Soft Drinks",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 48,
+      "active": true,
+      "source": "owner"
+    },
+    {
+      "code": "414",
+      "name": "Mirinda 400ml",
+      "price": 200,
+      "category": "Soft Drinks",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 49,
+      "active": true,
+      "source": "owner"
+    },
+    {
+      "code": "415",
+      "name": "7UP 400ml",
+      "price": 200,
+      "category": "Soft Drinks",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 50,
+      "active": true,
+      "source": "owner"
+    },
+    {
+      "code": "421",
+      "name": "Pepsi 1L",
+      "price": 300,
+      "category": "Soft Drinks",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 51,
+      "active": true,
+      "source": "owner"
+    },
+    {
+      "code": "422",
+      "name": "Coca-Cola 1L",
+      "price": 300,
+      "category": "Soft Drinks",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 52,
+      "active": true,
+      "source": "owner"
+    },
+    {
+      "code": "423",
+      "name": "Elephant House 1L",
+      "price": 300,
+      "category": "Soft Drinks",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 53,
+      "active": true,
+      "source": "owner"
+    },
+    {
+      "code": "424",
+      "name": "Cream Soda 1L",
+      "price": 0,
+      "category": "Soft Drinks",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 54,
       "active": false,
-      "source": "unconfirmed"
+      "source": "owner",
+      "note": "Price to confirm"
+    },
+    {
+      "code": "425",
+      "name": "Ginger Beer 1L",
+      "price": 0,
+      "category": "Soft Drinks",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 55,
+      "active": false,
+      "source": "owner",
+      "note": "Price to confirm"
+    },
+    {
+      "code": "431",
+      "name": "Coca-Cola 1.5L",
+      "price": 420,
+      "category": "Soft Drinks",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 56,
+      "active": true,
+      "source": "owner"
+    },
+    {
+      "code": "432",
+      "name": "Pepsi 1.5L",
+      "price": 420,
+      "category": "Soft Drinks",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 57,
+      "active": true,
+      "source": "owner"
+    },
+    {
+      "code": "441",
+      "name": "Campa",
+      "price": 250,
+      "category": "Soft Drinks",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 58,
+      "active": true,
+      "source": "owner"
+    },
+    {
+      "code": "442",
+      "name": "N.L.G.",
+      "price": 250,
+      "category": "Soft Drinks",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 59,
+      "active": true,
+      "source": "owner"
+    },
+    {
+      "code": "501",
+      "name": "Yoghurt",
+      "price": 80,
+      "category": "Desserts",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 60,
+      "active": true,
+      "source": "owner"
+    },
+    {
+      "code": "502",
+      "name": "Jelly",
+      "price": 30,
+      "category": "Desserts",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 61,
+      "active": true,
+      "source": "owner"
+    },
+    {
+      "code": "503",
+      "name": "Watalappan",
+      "price": 120,
+      "category": "Desserts",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 62,
+      "active": true,
+      "source": "owner"
+    },
+    {
+      "code": "504",
+      "name": "Jelly Pudding",
+      "price": 100,
+      "category": "Desserts",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 63,
+      "active": true,
+      "source": "owner"
+    },
+    {
+      "code": "505",
+      "name": "Sun Crush",
+      "price": 150,
+      "category": "Desserts",
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "sort": 64,
+      "active": true,
+      "source": "owner"
     }
   ]
 }
